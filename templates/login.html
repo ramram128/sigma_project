@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Login</title>
+    <link rel="stylesheet" type="text/css" href="'styles/login.css'">
+</head>
+<body>
+    <style>
+        body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: url('/static/background/vdo.mp4');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    margin: 0;
+
+}
+.video-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    min-width: 100%;
+    min-height: 100%;
+    z-index: -1;
+    object-fit: cover;
+}
+.sigma-name {
+  
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+}
+
+.navbar-left img {
+    height: 50px;
+   
+}
+
+.navbar-right a {
+    margin-right: 50px;
+    text-decoration: none;
+    color: #333;
+    font-weight: bold;
+
+}
+.navbar-left {
+    display: flex;
+    align-items: center;
+    justify-content: center; /* Centers content horizontally */
+  /* Takes up half the navbar */
+    height: 100%; /* Adjust if necessary */
+}
+
+.navbar-left span {
+    font-size: 18px;
+    color: #333;
+    font-weight: bold;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+.navbar-right a:hover {
+    color: #007bff;
+}
+
+.login-box {
+    width: 300px;
+    padding: 30px;
+    border-radius: 10px;
+    display: block;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(10px);
+}
+legend {
+    font-size: 20px;
+    font-weight: bold;
+    color: black;
+    margin-bottom: 20px;
+}
+
+input {
+    display: block;
+    width: 100%;
+    margin: 10px 0;
+    padding: 10px;
+    border: 1px solid #cccccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+
+}
+
+/* From Uiverse.io by BHARGAVPATEL1244 */ 
+button {
+    outline: none;
+    cursor: pointer;
+    border: none;
+    padding: 10px;
+    margin-left: 100px;
+    width: 100px;
+    font-family: inherit;
+    font-size: inherit;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: 700;
+    font-size: 17px;
+    border-radius: 5px;
+    overflow: hidden;
+    background: lightskyblue;
+    color: ghostwhite;
+   }
+   
+   button span {
+    position: relative;
+    z-index: 10;
+    transition: color 0.4s;
+   }
+   
+   button:hover span {
+    color: #fff;
+   }
+   
+   button::before,
+   button::after {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+   }
+   
+   button::before {
+    content: "";
+    background: linear-gradient(145deg, grey, black);
+    width: 120%;
+    left: -10%;
+    transform: skew(30deg);
+    transition: transform 0.4s cubic-bezier(0.3, 1, 0.8, 1);
+   }
+   
+   button:hover::before {
+    transform: translate3d(100%, 0, 0);
+   }
+   
+
+.error {
+    color: rgb(26, 2, 2);
+}
+
+footer {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    font-weight: bold;
+    width: 100%;
+    color: black;
+    text-align: center;
+    padding: 10px;
+}
+    </style>
+    
+    <!-- Video Background -->
+    <video autoplay muted loop class="video-bg">
+        <source src="{{ url_for('static', filename='background/vdo.mp4') }}" type="video/mp4">
+        Your browser does not support HTML5 video.
+    </video>
+    <nav class="navbar">
+        <div class="navbar-left">
+            <a href="login.html"><img src="{{ url_for('static', filename='background/lo.png') }}" alt="Logo"></a>
+            <span class="sigma-name">Sigma</span>
+        </div>
+        <div class="navbar-right">
+            <a href="/help">Help</a>
+            <a href="/about">About</a>
+        </div>
+    </nav>
+    
+    <fieldset class="login-box">
+        <legend>Admin Login</legend>
+        <form method="POST">
+            <input type="text" name="username" placeholder="Username" required>
+            <input type="password" name="password" placeholder="Password" required>
+            <br>
+            <button type="submit"><span> Login</span></button>
+            <!-- {% if error %}
+                <p class="error">{{ error }}</p>
+            {% endif %} -->
+        </form>
+    </fieldset>
+    <footer>
+        <p>&copy; 2021 Sigma. All rights reserved.</p>
+    </footer>
+</body>
+</html>

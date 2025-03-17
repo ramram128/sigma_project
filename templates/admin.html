@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Control Panel</title>
+    <link rel="stylesheet" href="styles/admin.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
+
+        .video-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            min-width: 100%;
+            min-height: 100%;
+            z-index: -1;
+            object-fit: cover;
+        }
+
+        .sigma-name {
+            font: 40px;
+            color: black;
+            font-weight: bold;
+            text-decoration: none;
+            display: flex;
+            top: 1px;
+            margin-left: 10px;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 2;
+        }
+
+        .navbar-left img {
+            height: 50px;
+        }
+
+        .navbar-right a {
+            font: 60px;
+            margin-right: 50px;
+            color: #333;
+            font-weight: bold;
+        }
+
+        .navbar-left {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+        }
+
+        .navbar-right a:hover {
+            color: #007bff;
+        }
+
+        footer {
+            position: fixed;
+            left: 0;
+            bottom: 0;
+            font-weight: bold;
+            width: 100%;
+            color: black;
+            text-align: center;
+            padding: 10px;
+            z-index: 2;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: start;
+            margin-top: auto;
+            position: absolute;
+            width: 100%;
+            top: 25%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 2;
+        }
+
+        table {
+            width: 45%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th,
+        td {
+            padding: 10px;
+            border: 1px solid #ccc;
+            text-align: center;
+        }
+
+        button {
+            padding: 5px 10px;
+            margin: 0 5px;
+            cursor: pointer;
+        }
+
+        .download-btn {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+        }
+
+        .delete-btn {
+            background-color: #f44336;
+            color: white;
+            border: none;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Video Background -->
+    <video autoplay muted loop class="video-bg">
+        <source src="{{ url_for('static', filename='background/vdo.mp4') }}" type="video/mp4">
+        Your browser does not support HTML5 video.
+    </video>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="navbar-left">
+            <a href="login.html"><img src="{{ url_for('static', filename='background/lo.png') }}" alt="Logo"></a>
+            <span class="sigma-name">Sigma</span>
+        </div>
+        <div class="navbar-right">
+            <a href="/help">Help</a>
+            <a href="/about">About</a>
+        </div>
+    </nav>
+
+    <!-- Container -->
+    <div class="container">
+        <h1>📋 Attendance Files</h1>
+        <table id="fileTable">
+            <thead>
+                <tr>
+                    <th>File Name</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Files will be loaded here -->
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2021 Sigma. All rights reserved.</p>
+    </footer>
+
+    <!-- Script -->
+    <script>
+        async function loadFiles() {
+            const response = await fetch("/files");
+            const files = await response.json();
+            const tableBody = document.querySelector("#fileTable tbody");
+            tableBody.innerHTML = "";
+
+            if (files.length === 0) {
+                tableBody.innerHTML = "<tr><td colspan='2'>No files found.</td></tr>";
+                return;
+            }
+
+            files.forEach(file => {
+                const row = document.createElement("tr");
+
+                const nameCell = document.createElement("td");
+                nameCell.textContent = file;
+
+                const actionsCell = document.createElement("td");
+
+                const downloadBtn = document.createElement("button");
+                downloadBtn.textContent = "Download";
+                downloadBtn.classList.add("download-btn");
+                downloadBtn.onclick = () => {
+                    window.location.href = `/download/${file}`;
+                };
+
+                const deleteBtn = document.createElement("button");
+                deleteBtn.textContent = "Delete";
+                deleteBtn.classList.add("delete-btn");
+                deleteBtn.onclick = async () => {
+                    const confirmDelete = confirm(`Are you sure you want to delete ${file}?`);
+                    if (confirmDelete) {
+                        await fetch(`/delete/${file}`, { method: "DELETE" });
+                        loadFiles();
+                    }
+                };
+
+                actionsCell.appendChild(downloadBtn);
+                actionsCell.appendChild(deleteBtn);
+
+                row.appendChild(nameCell);
+                row.appendChild(actionsCell);
+
+                tableBody.appendChild(row);
+            });
+        }
+
+        loadFiles();
+    </script>
+
+</body>
+
+</html>

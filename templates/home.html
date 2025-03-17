@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Home</title>
+    <style>
+        /* Video background */
+        .video-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            min-width: 100%;
+            min-height: 100%;
+            z-index: -1;
+            object-fit: cover;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: #000;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
+
+        .sigma-name {
+          font: 40px;
+            color: black;
+            font-weight: bold;
+            text-decoration: none;
+            display: flex;
+            margin-left: 10px;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 2;
+        }
+
+        .navbar-left img {
+            height: 50px;
+        }
+
+        .navbar-right a {
+            margin-right: 50px;
+            text-decoration: none;
+            color: #333;
+            font-weight: bold;
+        }
+
+        .navbar-left {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+        }
+
+        .navbar-right a:hover {
+            color: #007bff;
+        }
+
+        footer {
+            position: fixed;
+            left: 0;
+            bottom: 0;
+            font-weight: bold;
+            width: 100%;
+            color: black;
+            text-align: center;
+            padding: 10px;
+            z-index: 2;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: black;
+            text-align: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        .container h1 {
+            font-size: 3em;
+            line-height: 1.2;
+            margin-bottom: 3em;
+            margin-top: -5em;
+            color: black;
+            
+        }
+
+        .btn {
+            padding: 15px 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        
+        }
+
+        /* Button styles */
+        button {
+            cursor: pointer;
+            position: relative;
+            padding: 10px 24px 10px 24px;
+            margin: 0 8px 0 8px;
+            font-size: 18px;
+            color: rgb(193, 163, 98);
+            border: 2px solid rgb(193, 163, 98);
+            border-radius: 20px;
+            background-color: transparent;
+            font-weight: 600;
+            transition: all 0.3s cubic-bezier(0.23, 1, 0.320, 1);
+            overflow: hidden;
+        }
+
+        button::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            margin: auto;
+            width: 50px;
+            height: 50px;
+            border-radius: inherit;
+            scale: 0;
+            z-index: -1;
+            background-color: rgb(13, 146, 203);
+            transition: all 0.6s cubic-bezier(0.23, 1, 0.320, 1);
+        }
+
+        button:hover::before {
+            scale: 3;
+        }
+
+        button:hover {
+            color: #212121;
+            scale: 1.1;
+            box-shadow: 0 0px 20px rgba(226, 10, 129, 0.4);
+        }
+
+        button:active {
+            scale: 1;
+        }
+    </style>
+</head>
+<body>
+    <!-- Video Background -->
+    <video class="video-bg" autoplay muted loop>
+        <source src="{{ url_for('static', filename='background/vdo.mp4') }}" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="navbar-left">
+            <a href="login.html"><img src="{{ url_for('static', filename='background/lo.png') }}" alt="Logo"></a>
+            <span class="sigma-name">Sigma</span>
+        </div>
+        <div class="navbar-right">
+            <a href="/help">Help</a>
+            <a href="/about">About</a>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <div class="container">
+        <h1>Welcome, Admin!</h1>
+        <div class="btn">
+            <button id="runBtn">Camera</button>
+            <button onclick="window.location.href='/admin'">View Files</button>
+            <button onclick="window.location.href='/change-time-slot'">Change Time Slot</button>
+            <button onclick="window.location.href='/new-student'">New Student</button>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2021 Sigma. All rights reserved.</p>
+    </footer>
+
+    <!-- Script -->
+    <script>
+        document.getElementById('runBtn').addEventListener('click', async () => {
+            try {
+                const response = await fetch('/run-python', { method: 'POST' });
+                const data = await response.json();
+
+                if (data.output.includes("No active slot currently")) {
+                    alert("⚠️ " + data.output);
+                } else if (data.output.toLowerCase().includes("error") || data.output.toLowerCase().includes("traceback")) {
+                    alert("❌ Error occurred: " + data.output);
+                } else {
+                    alert("✅ Success: " + data.output);
+                }
+            } catch (err) {
+                alert("❌ Failed to run script: " + err.message);
+            }
+        });
+    </script>
+</body>
+</html>

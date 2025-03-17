@@ -1,0 +1,426 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Change Time Slot</title>
+    <link rel="stylesheet" href="/styles/change_time.css">
+</head>
+<style>
+    /* General styles */
+    body {
+        font-family: Arial, sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background: url("{{ url_for('static', filename='background/8.gif') }}");
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: center;
+        background-attachment: fixed;
+        margin: 0;
+        padding: 0;
+    }
+    .video-bg {
+        position: fixed;
+        top: 0;
+        left: 0;
+        min-width: 100%;
+        min-height: 100%;
+        z-index: -1;
+        object-fit: cover;
+    }
+    
+
+/* Navigation styles */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+}
+
+.navbar-left {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+}
+
+.navbar-left img {
+    height: 50px;
+}
+
+.navbar-left span {
+    font-size: 18px;
+    color: #333;
+    font-weight: bold;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.navbar-right a {
+    margin-right: 50px;
+    text-decoration: none;
+    color: #333;
+    font-weight: bold;
+}
+
+.navbar-right a:hover {
+    color: #007bff;
+}
+
+.sigma-name {
+    font: 60px Arial, sans-serif;
+    color: black;
+    font-weight: bold;
+    text-decoration: none;
+    display: flex;
+    top: 1px;
+    margin-left: 10px;
+    align-items: center;
+    justify-content: center;
+}
+
+
+/* Container styles */
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: start;
+    text-align: center;
+    margin-top: 120px;
+    position: absolute;
+    width: 100%;
+    top: 25%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  
+}
+
+.container h1 {
+    font-size: 3em;
+    line-height: 1.2;
+    margin: 120px;
+    color: black;
+
+}
+fieldset {
+    width: 60%;
+    margin-bottom: 30px;
+    padding: 20px;
+    border-radius: 10px;
+    backdrop-filter: blur(10px);
+}
+
+.time-form {
+    
+    padding: 20px;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 60%;
+    text-align: center;
+}
+.time-table{
+    backdrop-filter: blur(10px);
+}
+
+.input-group {
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+
+/* Input styles */
+label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+/* From Uiverse.io by G4b413l */ 
+.group {
+    position: relative;
+    margin: 5% 10% 0% 5%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+   }
+   
+   .input {
+    font-size: 16px;
+    padding: 10px 10px 10px 5px;
+    display: block;
+    justify-content: center;
+    align-items: center;   
+    width: 80%;
+    border: none;
+    border-bottom: 1px solid #515151;
+    background: transparent;
+   }
+   
+   .input:focus {
+    outline: none;
+   }
+   
+   label {
+    color: #999;
+    font-size: 18px;
+    font-weight: normal;
+    position: absolute;
+    pointer-events: none;
+    left: 5px;
+    top: 10px;
+    transition: 0.2s ease all;
+    -moz-transition: 0.2s ease all;
+    -webkit-transition: 0.2s ease all;
+   }
+   
+   .input:focus ~ label, .input:valid ~ label {
+    left: 50px;
+    font-size: 14px;
+    color: #5264AE;
+   }
+   .bar:before, .bar:after {
+    content: '';
+    height: 2px;
+    width: 0;
+    bottom: 1px;
+    position: absolute;
+    background: #5264AE;
+    transition: 0.2s ease all;
+    -moz-transition: 0.2s ease all;
+    -webkit-transition: 0.2s ease all;
+   }
+   
+   .bar:before {
+    left: 50%;
+   }
+   
+   .bar:after {
+    right: 50%;
+   }
+   
+   .input:focus ~ .bar:before, .input:focus ~ .bar:after {
+    width: 50%;
+   }
+   
+   .highlight {
+    position: absolute;
+    height: 60%;
+    width: 10px;
+    top: 25%;
+    left: 0;
+    pointer-events: none;
+    opacity: 0.5;
+   }
+   
+   .input:focus ~ .highlight {
+    animation: inputHighlighter 0.3s ease;
+   }
+   
+   @keyframes inputHighlighter {
+    from {
+     background: #5264AE;
+    }
+   
+    to {
+     width: 0;
+     background: transparent;
+    }
+   }
+
+   .time-table {
+    width: 70%;
+    margin-top: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.time-table th, .time-table td {
+    padding: 12px 15px;
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+}
+
+.time-table thead {
+    background: linear-gradient(to right, rgb(1, 12, 17), rgb(0, 12, 17));
+    color: white;
+    border-radius: 9px;
+}
+
+.time-table tbody tr:hover {
+    background-color: rgba(13, 146, 203, 0.1);
+}
+
+/* Delete Button Styling */
+.delete-btn {
+    cursor: pointer;
+    position: relative;
+    padding: 8px 16px;
+    font-size: 14px;
+    color: rgb(193, 163, 98);
+    border: 2px solid rgb(193, 163, 98);
+    border-radius: 20px;
+    background-color: transparent;
+    font-weight: 600;
+    transition: all 0.3s cubic-bezier(0.23, 1, 0.320, 1);
+    overflow: hidden;
+}
+
+.delete-btn::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    margin: auto;
+    width: 50px;
+    height: 50px;
+    border-radius: inherit;
+    scale: 0;
+    z-index: -1;
+    background-color: red;
+    transition: all 0.6s cubic-bezier(0.23, 1, 0.320, 1);
+}
+
+.delete-btn:hover::before {
+    scale: 3;
+}
+
+.delete-btn:hover {
+    color: white;
+    background-color: red;
+    scale: 1.1;
+    box-shadow: 0 0px 20px rgba(226, 10, 129, 0.4);
+}
+
+.delete-btn:active {
+    scale: 1;
+}
+button {
+    cursor: pointer;
+    position: relative;
+    padding: 10px 24px 10px 24px;
+    margin: 0 8px 0 8px;
+    font-size: 18px;
+    color: rgb(193, 163, 98);
+    border: 2px solid rgb(193, 163, 98);
+    border-radius: 20px;
+    background-color: transparent;
+    font-weight: 600;
+    transition: all 0.3s cubic-bezier(0.23, 1, 0.320, 1);
+    overflow: hidden;
+  }
+  
+  button::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    margin: auto;
+    width: 50px;
+    height: 50px;
+    border-radius: inherit;
+    scale: 0;
+    z-index: -1;
+    background-color: rgb(13, 146, 203);
+    transition: all 0.6s cubic-bezier(0.23, 1, 0.320, 1);
+  }
+  
+  button:hover::before {
+    scale: 3;
+  }
+  
+  button:hover {
+    color: #212121;
+    scale: 1.1;
+    box-shadow: 0 0px 20px rgba(226, 10, 129, 0.4);
+  }
+  
+  button:active {
+    scale: 1;
+  }
+</style>
+<body>
+    
+    <!-- Video Background -->
+    <video autoplay muted loop class="video-bg">
+        <source src="{{ url_for('static', filename='background/vdo.mp4') }}" type="video/mp4">
+        Your browser does not support HTML5 video.
+    </video>
+    <nav class="navbar">
+        <div class="navbar-left">
+            <a href="login.html"><img src="{{ url_for('static', filename='background/lo.png') }}" alt="Logo"></a>
+            <span class="sigma-name">Sigma</span>
+        </div>
+        <div class="navbar-right">
+            <a href="/help">Help</a>
+            <a href="/about">About</a>
+        </div>
+    </nav> 
+    <div class="container">
+        <h1>Change Time Slots</h1>
+        <form method="POST" class="time-form">
+            <fieldset >
+                <legend>Time Slot Selection</legend>
+                
+                <div class="group">
+                    <input required type="time" name="start_time" id="start_time" class="input">
+                    <span class="highlight"></span>
+                    <span class="bar"></span>
+                    <label>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbspStart Time</label>
+                </div>
+                <br>
+                <div class="group">
+                    <input required type="time" name="end_time" id="end_time" class="input">
+                    <span class="highlight"></span>
+                    <span class="bar"></span>
+                    <label>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp  &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbspEnd Time</label>
+                </div>
+                <br><br>
+                <button type="submit" class="submit-btn">Add Time Slot</button>
+            </fieldset>
+        </form>    
+           
+        </form>
+        <table class="time-table">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Start Time</th>
+                    <th>End Time</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for slot in slots %}
+                <tr>
+                    <td>{{ loop.index }}</td>
+                    <td>{{ slot[0] }}</td>
+                    <td>{{ slot[1] }}</td>
+                    <td>
+                        <form method="POST" action="/delete-time-slot" style="display:inline;">
+                            <input type="hidden" name="index" value="{{ loop.index0 }}">
+                            <button class="delete-btn" type="submit">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    
+
+</body>
+</html>
